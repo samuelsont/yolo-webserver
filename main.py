@@ -40,6 +40,13 @@ SUFFIX = '.jpeg'  # TODO: is jpeg encoding faster? verify
 FNAME = f"{DIRNAME}/{FILE}{SUFFIX}"
 MODEL = Yolov4(weight_path=WEIGHT_PATH, class_name_path=CLASSES_PATH)
 
+
+# hello world route
+@app.route('/')
+def home():
+    return "Hello World " + request.args.get("name", default=', Hola')
+
+
 # detect route:
 #   action: 
 #   input: image: base64 string, blob
@@ -91,14 +98,15 @@ def enroll():
             fname.write(img_bytes)
         
         predictions = MODEL.predict(FNAME, plot_img=False)
-        return Response(predictions=predictions.to_json()), status=200)
+        return Response(predictions=predictions.to_json(), status=200)
         
     except Exception as e:
         print(e)
         return "image decoding failed"
 
-# preprocess image
 
-# run detection
-
-# return detections
+# run app if this is the main execution thread
+if __name__ == '__main__':    
+    # start the flask app
+    app.run(host="0.0.0.0", port=5000, debug=True,
+        threaded=True, use_reloader=False)
