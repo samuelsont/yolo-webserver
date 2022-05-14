@@ -51,8 +51,8 @@ def home():
 #   action: 
 #   input: image: base64 string, blob
 #   output: Resp([200]): detections: bbox, class, probability 
-@app.route('/enroll', methods=['POST'])
-def enroll():
+@app.route('/detect', methods=['POST'])
+def detect():
     
     req_image = None
     img_bytes = None
@@ -98,7 +98,7 @@ def enroll():
             fname.write(img_bytes)
         
         predictions = MODEL.predict(FNAME, plot_img=False)
-        return Response(predictions=predictions.to_json(), status=200)
+        return Response(response=json.dumps(predictions.to_json()), status=200)
         
     except Exception as e:
         print(e)
